@@ -1,1 +1,2 @@
-pytest==8.2.2pre-commit==3.7.1
+pytest==8.2.2
+pre-commit==3.7.1
