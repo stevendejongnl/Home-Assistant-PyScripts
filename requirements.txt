@@ -1,3 +1,5 @@
 pytest==8.2.2
 requests==2.32.3
 pre-commit==3.7.1
+
+hassapi==0.2.1
