@@ -1,4 +1,6 @@
+from dataclasses import dataclass
 from enum import Enum
+from typing import Callable
 
 
 class DependencyType(Enum):
@@ -6,29 +8,58 @@ class DependencyType(Enum):
     FAKE = 'fake'
 
 
+class DependencyNotFound(Exception):
+    pass
+
+
+@dataclass(frozen=True)
+class Dependency:
+    instance: Callable
+    type: DependencyType
+
+
 class DependencyInjection:
     _instance = None
+    _dependency_type: DependencyType = DependencyType.REAL
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(DependencyInjection, cls).__new__(cls, *args, **kwargs)
-            cls._instance.dependencies = {}
+            dependencies: dict[str, Dependency] = {}
+            cls._instance.dependencies = dependencies
         return cls._instance
 
-    def add_dependency(self, dependency_info: tuple):
-        name, instance, dependency_type = dependency_info
-        self.dependencies[name] = {'instance': instance, 'type': dependency_type.value}
+    def use_type(self, dependency_type: DependencyType) -> None:
+        self._dependency_type = dependency_type
 
-    def get_dependency(self, cls):
+    def add_dependency(
+            self,
+            class_name: str,
+            instance: Callable,
+            dependency_type: DependencyType
+    ) -> None:
+        self.dependencies[class_name] = Dependency(
+            instance=instance,
+            type=dependency_type,
+        )
+
+    def _get_dependency(self, cls, *args, **kwargs):
         dependency = self.dependencies.get(cls.__name__)
-        if dependency:
-            return dependency['instance']
-        return None
+        if not dependency:
+            raise DependencyNotFound
+
+        return dependency.instance(*args, **kwargs)
+
+    def get(self, real, fake, *args, **kwargs):
+        if self._dependency_type == DependencyType.FAKE:
+            return self._get_dependency(fake, *args, **kwargs)
+        return self._get_dependency(real, *args, **kwargs)
 
 
-def add_dependency(dependency_type: DependencyType):
+def register_dependency(dependency_type: DependencyType):
     def decorator(cls):
         dependency_injection = DependencyInjection()
-        dependency_injection.add_dependency((cls.__name__, cls(), dependency_type))
+        dependency_injection.add_dependency(cls.__name__, cls, dependency_type)
         return cls
+
     return decorator

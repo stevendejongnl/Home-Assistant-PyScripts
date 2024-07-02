@@ -3,6 +3,9 @@ from madebysteven_api.madebysteven_api import MadeByStevenApi
 
 
 def test_response_from_healthcheck_returns_ok():
-    madebysteven_api = MadeByStevenApi(DependencyType.FAKE)
+    madebysteven_api = MadeByStevenApi(
+        DependencyType.FAKE,
+        response="ok"
+    )
     response = madebysteven_api.healthcheck()
     assert response == 'ok'
