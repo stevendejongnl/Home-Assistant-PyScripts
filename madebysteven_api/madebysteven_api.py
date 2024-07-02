@@ -39,7 +39,7 @@ class MadeByStevenApiReal:
 
 
 class MadeByStevenApi:
-    def __init__(self, dependency_type=DependencyType.FAKE, *args, **kwargs):
+    def __init__(self, dependency_type=DependencyType.REAL, *args, **kwargs):
         dependency_injection = DependencyInjection()
         dependency_injection.use_type(dependency_type)
         self.api = dependency_injection.get(MadeByStevenApiReal, MadeByStevenApiFake, *args, **kwargs)
