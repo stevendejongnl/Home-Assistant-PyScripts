@@ -1,6 +1,6 @@
 import pytest
 
-from madebysteven_api import MadeByStevenApi
+from apps.madebysteven_api.madebysteven_api import MadeByStevenApi
 from helpers.dependency_injection import DependencyType
 
 
