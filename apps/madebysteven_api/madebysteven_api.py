@@ -4,8 +4,8 @@ import logging
 
 import aiohttp
 
-from helpers.dependency_injection import DependencyInjection, DependencyType, register_dependency
-from helpers.logging import LoggerHelper
+from pyscript.helpers.dependency_injection import DependencyInjection, DependencyType, register_dependency
+from pyscript.helpers.logging import LoggerHelper
 
 logger = LoggerHelper.get_logger(__name__, logging.INFO)
 
