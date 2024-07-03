@@ -1,5 +1,5 @@
 pytest==8.2.2
+pytest-asyncio==0.23.7
 requests==2.32.3
 pre-commit==3.7.1
-
-hassapi==0.2.1
+aiohttp==3.9.5
